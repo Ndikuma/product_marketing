@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name|default:"Product Details" }} - Product Marketing{% endblock %}
+{% block meta_description %}Discover {{ product.name|default:"this amazing product" }} on Product Marketing. Join our AI-powered affiliate program to promote and earn commissions today!{% endblock %}
+{% block og_title %}{{ product.name|default:"Explore This Product" }} - Product Marketing{% endblock %}
+{% block og_description %}Promote {{ product.name|default:"this product" }} with Product Marketing's affiliate tools and start earning commissions. Join now!{% endblock %}
+{% block og_image %}{{ images.0.get_image_url|default:"https://www.productmarketing.com/static/images/og-default.jpg" }}{% endblock %}
+{% block canonical_url %}https://www.productmarketing.com/products/{{ product.pk|default:"" }}{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .gradient-text { background: linear-gradient(to right, #3b82f6, #10b981); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hover-scale { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .hover-scale:hover { transform: scale(1.05); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    {% if delete is not None and product %}
+    <!-- Delete Product Confirmation -->
+    <div class="max-w-lg mx-auto bg-gray-800 p-8 rounded-2xl shadow-2xl backdrop-blur-lg">
+      <h1 class="text-3xl font-bold text-red-400 mb-6">Confirm Deletion: {{ product.name }}</h1>
+      <p class="text-gray-300 mb-8">Are you sure you want to delete this product? This action is permanent.</p>
+      <form method="post" class="flex justify-center gap-4">
+        {% csrf_token %}
+        <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500 transition duration-300">Delete</button>
+        <a href="{% url 'marketing:product_list' %}" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500 transition duration-300">Cancel</a>
+      </form>
+    </div>
+    {% elif delete_image is not None and image and product %}
+    <!-- Delete Image Confirmation -->
+    <div class="max-w-lg mx-auto bg-gray-800 p-8 rounded-2xl shadow-2xl backdrop-blur-lg">
+      <h1 class="text-3xl font-bold text-red-400 mb-6">Confirm Image Deletion</h1>
+      <p class="text-gray-300 mb-6">Are you sure you want to delete this image for {{ product.name }}?</p>
+      <img src="{{ image.get_image_url }}" alt="{{ image.alt_text|default:'Product image' }}" class="w-full h-64 object-cover rounded-lg mb-6">
+      <form method="post" class="flex justify-center gap-4">
+        {% csrf_token %}
+        <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-500 transition duration-300">Delete</button>
+        <a href="{% url 'marketing:product_detail' product.pk %}" class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-500 transition duration-300">Cancel</a>
+      </form>
+    </div>
+    {% elif product %}
+    <!-- Product Details -->
+    <div class="max-w-6xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-2xl backdrop-blur-lg">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
+        <h1 class="text-4xl font-extrabold gradient-text">{{ product.name }}</h1>
+        <div class="flex gap-4 mt-4 sm:mt-0">
+          <button onclick="copyAffiliateLink('{{ product.purchase_url|escapejs }}')" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500 transition duration-300">
+            Share Affiliate Link
+          </button>
+          <div class="flex gap-2">
+            <a href="https://x.com/share?url={{ product.purchase_url|urlencode }}&text=Check%20out%20{{ product.name|urlencode }}%20on%20Product%20Marketing!" target="_blank" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 focus:outline-none focus:ring-4 focus:ring-blue-500" aria-label="Share on X">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 12.24h-6.657l-5.007-6.92-5.736 6.92h-3.308l7.797-8.92-8.24-11.58h6.657l4.508 6.02 5.403-6.02zm-2.404 18.24h1.83l-11.8-16.92h-1.83l11.8 16.92z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Image Gallery -->
+        <div>
+          {% if images %}
+          <div class="relative" role="region" aria-label="Product image gallery">
+            <!-- Main Image -->
+            <div class="gallery-main mb-6 hover-scale">
+              <img id="main-image" src="{{ images.0.get_image_url|default:'https://picsum.photos/seed/product/600/450' }}" alt="{{ images.0.alt_text|default:product.name }}" class="w-full h-80 lg:h-96 object-cover rounded-xl cursor-pointer" onclick="openLightbox(0)" aria-label="Click to enlarge main image">
+            </div>
+            <!-- Thumbnails -->
+            <div class="gallery-thumbs flex overflow-x-auto space-x-3 pb-4 scrollbar-hide snap-x snap-mandatory">
+              {% for image in images %}
+              <img
+                src="{{ image.get_image_url }}"
+                alt="{{ image.alt_text|default:product.name }}"
+                class="w-20 h-20 object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity duration-300"
+                onclick="changeMainImage('{{ image.get_image_url|escapejs }}', '{{ image.alt_text|default:product.name|escapejs }}', {{ forloop.counter0 }})"
+                loading="lazy"
+                aria-label="Select image {{ forloop.counter }}"
+              >
+              {% endfor %}
+            </div>
+            <!-- Lightbox -->
+            <div id="lightbox" class="fixed inset-0 bg-black bg-opacity-95 hidden flex items-center justify-center z-50" tabindex="-1" role="dialog" aria-label="Image lightbox">
+              <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl focus:outline-none focus:ring-4 focus:ring-blue-500" aria-label="Close lightbox">×</button>
+              <button onclick="prevLightboxImage()" class="absolute left-6 text-white text-3xl focus:outline-none focus:ring-4 focus:ring-blue-500" aria-label="Previous image">❮</button>
+              <img id="lightbox-image" src="" alt="" class="max-w-full max-h-[90vh] object-contain rounded-lg" aria-live="polite">
+              <button onclick="nextLightboxImage()" class="absolute right-6 text-white text-3xl focus:outline-none focus:ring-4 focus:ring-blue-500" aria-label="Next image">❯</button>
+            </div>
+            <script>
+              let currentImageIndex = 0;
+              const images = [
+                {% for image in images %}
+                { src: '{{ image.get_image_url|escapejs }}', alt: '{{ image.alt_text|default:product.name|escapejs }}' }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+              ];
+
+              function changeMainImage(src, alt, index) {
+                const mainImage = document.getElementById('main-image');
+                mainImage.src = src;
+                mainImage.alt = alt;
+                currentImageIndex = index;
+              }
+
+              function openLightbox(index) {
+                currentImageIndex = index;
+                const lightbox = document.getElementById('lightbox');
+                const lightboxImage = document.getElementById('lightbox-image');
+                lightboxImage.src = images[index].src;
+                lightboxImage.alt = images[index].alt;
+                lightbox.classList.remove('hidden');
+                lightbox.focus();
+              }
+
+              function closeLightbox() {
+                document.getElementById('lightbox').classList.add('hidden');
+              }
+
+              function prevLightboxImage() {
+                currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                const lightboxImage = document.getElementById('lightbox-image');
+                lightboxImage.src = images[currentImageIndex].src;
+                lightboxImage.alt = images[currentImageIndex].alt;
+              }
+
+              function nextLightboxImage() {
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                const lightboxImage = document.getElementById('lightbox-image');
+                lightboxImage.src = images[currentImageIndex].src;
+                lightboxImage.alt = images[currentImageIndex].alt;
+              }
+
+              function copyAffiliateLink(url) {
+                navigator.clipboard.writeText(url).then(() => {
+                  alert('Affiliate link copied to clipboard!');
+                }).catch(() => {
+                  alert('Failed to copy link.');
+                });
+              }
+
+              // Enhanced Keyboard Navigation
+              document.addEventListener('keydown', (e) => {
+                const lightbox = document.getElementById('lightbox');
+                if (!lightbox.classList.contains('hidden')) {
+                  if (e.key === 'ArrowLeft') prevLightboxImage();
+                  else if (e.key === 'ArrowRight') nextLightboxImage();
+                  else if (e.key === 'Escape') closeLightbox();
+                }
+              });
+            </script>
+          </div>
+          {% else %}
+          <p class="text-gray-400">No images available for this product.</p>
+          {% endif %}
+          {% if user.is_authenticated and user.is_staff %}
+          <a href="{% url 'marketing:product_image_create' product.pk %}" class="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 transition duration-300">Add Image</a>
+          {% endif %}
+        </div>
+        <!-- Product Details -->
+        <div class="space-y-6">
+          <p class="text-gray-300 leading-relaxed">{{ product.description|default:"No description available." }}</p>
+          <div class="flex items-center gap-4">
+            <p class="text-green-400 font-bold text-xl">Price: ${{ product.price|floatformat:2 }}</p>
+            {% if product.discount_price %}
+            <p class="text-red-400 text-base line-through">${{ product.discount_price|floatformat:2 }}</p>
+            {% endif %}
+          </div>
+          <p class="text-gray-300">Stock: {{ product.stock|default:"N/A" }}</p>
+          <p class="text-gray-300">Category: {{ product.category|default:"N/A" }}</p>
+          <p class="text-gray-300">Tags: {{ product.tags|default:"N/A" }}</p>
+          <p class="text-gray-300">Predicted Conversion Rate: {{ product.predict_conversion_rate|floatformat:2|default:"N/A" }}%</p>
+          <!-- Product Rating -->
+          <div class="flex items-center gap-2">
+            <span class="text-yellow-400">★★★★☆</span>
+            <span class="text-gray-400 text-sm">(4.5 / 5 based on 128 reviews)</span>
+          </div>
+          <a
+            href="{% url 'marketing:product_click' product.pk %}"
+            target="_blank"
+            class="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg text-white text-lg font-semibold focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300"
+          >
+            Buy Now
+          </a>
+          {% if user.is_authenticated and user.is_staff %}
+          <div class="flex gap-6 mt-6">
+            <a href="{% url 'marketing:product_update' product.pk %}" class="text-yellow-400 hover:underline">Edit Product</a>
+            <a href="{% url 'marketing:product_delete' product.pk %}" class="text-red-400 hover:underline">Delete Product</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <!-- Image List -->
+      <h2 class="text-3xl font-bold text-white mt-12 mb-6">Product Images</h2>
+      {% if images %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for image in images %}
+        <article class="bg-gray-700 p-4 rounded-xl hover-scale">
+          <img src="{{ image.get_image_url }}" alt="{{ image.alt_text|default:product.name }}" class="w-full h-40 object-cover rounded-lg mb-3" loading="lazy">
+          <p class="text-gray-300 text-sm">{{ image.alt_text|default:"No alt text" }}</p>
+          <p class="text-gray-300 text-sm">Primary: {{ image.is_primary|yesno:"Yes,No" }}</p>
+          {% if user.is_authenticated and user.is_staff %}
+          <a href="{% url 'marketing:product_image_delete' product.pk image.pk %}" class="text-red-400 hover:underline text-sm">Delete Image</a>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-400">No images available.</p>
+      {% endif %}
+      <!-- Related Ads -->
+      <h2 class="text-3xl font-bold text-white mt-12 mb-6">Related Campaigns</h2>
+      {% if ads %}
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {% for ad in ads %}
+        <article class="bg-gray-700 p-6 rounded-xl hover-scale">
+          <h3 class="text-xl font-semibold text-white mb-3">{{ ad.name|default:"Unnamed Ad" }}</h3>
+          <p class="text-gray-300 mb-3">{{ ad.content|truncatechars:100|default:"No content" }}</p>
+          <p class="text-gray-300 text-sm">CTR: {{ ad.get_ctr|floatformat:2|default:"N/A" }}%</p>
+          <p class="text-gray-300 text-sm">ROAS: {{ ad.get_roas|floatformat:2|default:"N/A" }}</p>
+          <a href="{% url 'marketing:ad_detail' ad.pk %}" class="text-blue-400 hover:underline">View Campaign</a>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="text-gray-400">No campaigns available for this product.</p>
+      {% endif %}
+      <!-- Call to Action -->
+      <div class="mt-12 text-center bg-gradient-to-r from-blue-800 to-blue-900 p-8 rounded-2xl shadow-lg">
+        <h2 class="text-3xl font-bold text-white mb-4">Join Our Affiliate Program!</h2>
+        <p class="text-gray-300 mb-6">Promote {{ product.name }} and earn commissions with our AI-powered platform. Start today!</p>
+        <a href="{% url 'marketing:register' %}" class="inline-block px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 transition duration-300 text-lg font-semibold">Get Started Now</a>
+      </div>
+    </div>
+    {% else %}
+    <!-- Fallback for Missing Product -->
+    <div class="max-w-6xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-2xl backdrop-blur-lg text-center">
+      <h1 class="text-3xl font-bold text-red-400 mb-6">Product Not Found</h1>
+      <p class="text-gray-300 mb-8">The requested product could not be found. Explore other products!</p>
+      <a href="{% url 'marketing:product_list' %}" class="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 transition duration-300">Back to Products</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

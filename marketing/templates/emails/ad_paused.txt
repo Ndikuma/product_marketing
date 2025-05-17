@@ -1,0 +1,13 @@
+Ad Paused: {{ ad_name }}
+
+The ad "{{ ad_name }}" for product "{{ product_name }}" has been paused due to low performance.
+
+Performance Metrics:
+- Click-Through Rate (CTR): {{ ctr|floatformat:2 }}%
+- Return on Ad Spend (ROAS): {{ roas|floatformat:2 }}
+- Engagement Rate: {{ engagement|floatformat:2 }}%
+
+Please review the ad in the admin panel to adjust targeting or content.
+
+Best regards,
+Product Marketing Team

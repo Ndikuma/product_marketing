@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ ad.name|default:"Ad Details" }}{% endblock %}
+{% block meta_description %}View details and performance metrics for {{ ad.name|default:"your ad" }} on Product Marketing's AI-powered platform.{% endblock %}
+{% block og_title %}{{ ad.name|default:"Ad Details" }} - Product Marketing{% endblock %}
+{% block og_description %}Explore {{ ad.name|default:"your ad" }} details, metrics, and performance on Product Marketing's intuitive platform.{% endblock %}
+{% block og_image %}https://www.productmarketing.com/static/images/og-ad.jpg{% endblock %}
+{% block canonical_url %}https://www.productmarketing.com{% if request.path %}{{ request.path }}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .gradient-text { background: linear-gradient(to right, #60a5fa, #34d399); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hover-scale { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .hover-scale:hover { transform: scale(1.05); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+{% if delete %}
+<section class="py-16 bg-gray-900 min-h-screen flex items-center justify-center">
+  <div class="max-w-lg mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
+    <h1 class="text-3xl font-extrabold text-red-400 mb-6 text-center">Confirm Delete: {{ ad.name|default:"Ad" }}</h1>
+    <p class="text-gray-300 mb-6 text-center">Are you sure you want to delete this ad? This action is permanent and cannot be undone.</p>
+    <form method="post" class="flex flex-wrap justify-center gap-4">
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="px-6 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 hover-scale focus:outline-none focus:ring-4 focus:ring-red-400 transition-all duration-300"
+      >
+        Delete Permanently
+      </button>
+      <a
+        href="{% url 'marketing:ad_list' %}"
+        class="px-6 py-3 border-2 border-gray-600 text-gray-300 rounded-lg font-semibold hover:bg-gray-700 hover-scale focus:outline-none focus:ring-4 focus:ring-gray-500 transition-all duration-300"
+      >
+        Cancel
+      </a>
+    </form>
+  </div>
+</section>
+{% else %}
+<section class="py-16 bg-gray-900">
+  <div class="max-w-4xl mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
+    <h1 class="text-4xl font-extrabold gradient-text mb-8">{{ ad.name|default:"Ad Details" }}</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Media Section -->
+      <div>
+        <img
+          src="{{ ad.media_url|default:'https://picsum.photos/seed/ad-'|add:ad.pk|add:'/600/400' }}"
+          alt="{{ ad.name|default:'Ad media' }}"
+          class="w-full h-64 object-cover rounded-lg hover-scale"
+          loading="lazy"
+          onerror="this.src='https://picsum.photos/seed/ad-' + Math.floor(Math.random() * 1000) + '/600/400';"
+        >
+      </div>
+      <!-- Details Section -->
+      <div class="space-y-4">
+        <p class="text-gray-300">{{ ad.content|default:"No content provided" }}</p>
+        <p class="text-gray-300">
+          <span class="font-semibold text-gray-200">Product:</span>
+          <a href="{% url 'marketing:product_detail' ad.product.pk %}" class="text-blue-400 hover:underline">{{ ad.product.name|default:"Unknown Product" }}</a>
+        </p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">Type:</span> {{ ad.get_ad_type_display|default:"N/A" }}</p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">Status:</span> {{ ad.get_status_display|default:"N/A" }}</p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">CTR:</span> {{ ad.get_ctr|floatformat:2|default:"0.00" }}%</p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">ROAS:</span> {{ ad.get_roas|floatformat:2|default:"0.00" }}</p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">Engagement Rate:</span> {{ ad.get_engagement_rate|floatformat:2|default:"0.00" }}%</p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">Budget:</span> ${{ ad.budget|floatformat:2|default:"0.00" }}</p>
+        <p class="text-gray-300"><span class="font-semibold text-gray-200">Platform:</span> {{ ad.get_target_platform_display|default:"N/A" }}</p>
+        <div class="flex flex-wrap gap-4">
+          <a
+            href="{{ ad.destination_url|default:'#' }}"
+            target="_blank"
+            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:from-blue-400 hover:to-blue-500 hover-scale focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-300"
+          >
+            Visit Ad
+          </a>
+          <a
+            href="{% url 'marketing:ad_update' ad.pk %}"
+            class="px-6 py-3 border-2 border-yellow-500 text-yellow-400 rounded-lg font-semibold hover:bg-yellow-500/20 hover-scale focus:outline-none focus:ring-4 focus:ring-yellow-400 transition-all duration-300"
+          >
+            Edit
+          </a>
+          <a
+            href="{% url 'marketing:ad_delete' ad.pk %}"
+            class="px-6 py-3 border-2 border-red-500 text-red-400 rounded-lg font-semibold hover:bg-red-500/20 hover-scale focus:outline-none focus:ring-4 focus:ring-red-400 transition-all duration-300"
+          >
+            Delete
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Performance Metrics Section -->
+    <h2 class="text-3xl font-extrabold gradient-text mt-12 mb-6">Performance Metrics</h2>
+    {% if metrics %}
+    <div class="overflow-x-auto scrollbar-hide">
+      <table class="min-w-full bg-gray-700 rounded-lg">
+        <thead class="bg-gray-600">
+          <tr>
+            <th class="py-3 px-4 text-left text-gray-200 font-semibold">Date</th>
+            <th class="py-3 px-4 text-left text-gray-200 font-semibold">Impressions</th>
+            <th class="py-3 px-4 text-left text-gray-200 font-semibold">Clicks</th>
+            <th class="py-3 px-4 text-left text-gray-200 font-semibold">Conversions</th>
+            <th class="py-3 px-4 text-left text-gray-200 font-semibold">Revenue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for metric in metrics %}
+          <tr class="border-b border-gray-600 hover:bg-gray-600/50">
+            <td class="py-3 px-4">
+              <a href="{% url 'marketing:metric_detail' metric.pk %}" class="text-blue-400 hover:underline">{{ metric.date|default:"N/A" }}</a>
+            </td>
+            <td class="py-3 px-4">{{ metric.impressions|default:"0" }}</td>
+            <td class="py-3 px-4">{{ metric.clicks|default:"0" }}</td>
+            <td class="py-3 px-4">{{ metric.conversions|default:"0" }}</td>
+            <td class="py-3 px-4">${{ metric.revenue|floatformat:2|default:"0.00" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-gray-400">No performance metrics available for this ad.</p>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Enhance button focus states
+  document.querySelectorAll('a, button').forEach(element => {
+    element.addEventListener('focus', () => {
+      element.classList.add('ring-2', 'ring-blue-400');
+    });
+    element.addEventListener('blur', () => {
+      element.classList.remove('ring-2', 'ring-blue-400');
+    });
+  });
+
+  // Table row hover effect
+  document.querySelectorAll('tbody tr').forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      row.classList.add('scale-102');
+    });
+    row.addEventListener('mouseleave', () => {
+      row.classList.remove('scale-102');
+    });
+  });
+</script>
+<style>
+  .scale-102 { transform: scale(1.02); transition: transform 0.2s ease; }
+</style>
+{% endblock %}

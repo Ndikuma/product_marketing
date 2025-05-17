@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Explore Products - Product Marketing{% endblock %}
+{% block meta_description %}Discover top affiliate products to promote and earn commissions with Product Marketing's AI-powered platform. Start today!{% endblock %}
+{% block og_title %}Explore Affiliate Products - Product Marketing{% endblock %}
+{% block og_description %}Browse a curated selection of high-converting products to promote and boost your earnings with Product Marketing.{% endblock %}
+{% block og_image %}https://www.productmarketing.com/static/images/og-products.jpg{% endblock %}
+{% block canonical_url %}https://www.productmarketing.com/products{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .gradient-text { background: linear-gradient(to right, #3b82f6, #10b981); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hover-scale { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .hover-scale:hover { transform: scale(1.05); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-gray-900 text-white min-h-screen">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+      <h1 class="text-4xl font-extrabold gradient-text">Discover Affiliate Products</h1>
+      {% if user.is_authenticated and user.is_staff %}
+      <a href="{% url 'marketing:product_create' %}" class="mt-4 sm:mt-0 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 transition duration-300">
+        Add New Product
+      </a>
+      {% endif %}
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="mb-8 bg-gray-800 p-6 rounded-2xl shadow-lg backdrop-blur-lg">
+      <form method="get" class="flex flex-col sm:flex-row gap-4">
+        <input
+          type="text"
+          name="q"
+          placeholder="Search products..."
+          class="flex-1 px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500 placeholder-gray-400"
+          aria-label="Search products"
+        >
+        <select
+          name="category"
+          class="px-4 py-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-500"
+          aria-label="Filter by category"
+        >
+          <option value="">All Categories</option>
+          {% for category in categories %}
+          <option value="{{ category }}">{{ category }}</option>
+          {% endfor %}
+        </select>
+        <button
+          type="submit"
+          class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-500 hover:to-blue-600 focus:outline-none focus:ring-4 focus워크
+ ring-blue-500 transition duration-300"
+        >
+          Search
+        </button>
+      </form>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for product in products %}
+      <article class="bg-gray-800 rounded-2xl shadow-xl bg-opacity-70 backdrop-blur-lg flex flex-col hover-scale">
+        <img
+          src="{{ product.get_primary_image|default:'https://picsum.photos/seed/product/600/450' }}"
+          alt="{{ product.name }}"
+          class="h-56 w-full object-cover rounded-t-2xl"
+          loading="lazy"
+        >
+        <div class="p-6 flex-grow">
+          <h2 class="text-xl font-semibold text-white mb-3">{{ product.name }}</h2>
+          <p class="text-gray-300 mb-4">{{ product.description|truncatechars:120 }}</p>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-yellow-400">★★★★☆</span>
+            <span class="text-gray-400 text-sm">(4.5 / 5)</span>
+          </div>
+          <div class="flex justify-between items-center mb-4">
+            <div>
+              <p class="text-green-400 font-bold text-lg">
+                ${{ product.price|floatformat:2 }}
+                {% if product.discount_price %}
+                <span class="text-red-400 text-sm line-through">${{ product.discount_price|floatformat:2 }}</span>
+                {% endif %}
+              </p>
+            </div>
+            {% if user.is_authenticated and user.is_staff %}
+            <p class="text-gray-400 text-sm">Stock: {{ product.stock }}</p>
+            {% else %}
+            <p class="text-gray-400 text-sm">
+              {% if product.stock %}Available{% else %}Unavailable{% endif %}
+            </p>
+            {% endif %}
+          </div>
+          <p class="text-gray-400 text-sm mb-4">Category: {{ product.category|default:"N/A" }}</p>
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a
+              href="{% url 'marketing:product_click' product.pk %}"
+              target="_blank"
+              class="flex-1 px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg text-white text-center font-semibold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500"
+            >
+              Buy Now
+            </a>
+            <a
+              href="{% url 'marketing:product_detail' product.pk %}"
+              class="flex-1 px-4 py-3 border-2 border-blue-400 text-blue-400 hover:bg-blue-900/50 rounded-lg text-center font-semibold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-400"
+            >
+              View Details
+            </a>
+          </div>
+          {% if user.is_authenticated and user.is_staff %}
+          <div class="mt-4 flex gap-4">
+            <a href="{% url 'marketing:product_update' product.pk %}" class="text-yellow-400 hover:underline text-sm">Edit</a>
+            <a href="{% url 'marketing:product_delete' product.pk %}" class="text-red-400 hover:underline text-sm">Delete</a>
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <p class="text-gray-400 text-center col-span-full text-lg">No products available. Check back soon!</p>
+      {% endfor %}
+    </div>
+
+    <!-- Call to Action -->
+    <div class="mt-12 text-center bg-gradient-to-r from-blue-800 to-blue-900 p-8 rounded-2xl shadow-lg">
+      <h2 class="text-3xl font-bold text-white mb-4">Start Earning with Affiliate Marketing!</h2>
+      <p class="text-gray-300 mb-6">Join Product Marketing to promote high-converting products and boost your revenue today.</p>
+      <a
+        href="{% url 'marketing:register' %}"
+        class="inline-block px-8 py-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 transition duration-300 text-lg font-semibold"
+      >
+        Join Now
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

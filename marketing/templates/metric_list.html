@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Performance Metrics{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Performance Metrics</h1>
+    <a href="{% url 'marketing:metric_create' %}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Metric</a>
+</div>
+<div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+    <table class="min-w-full">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="py-3 px-4 text-left text-gray-600">Ad</th>
+                <th class="py-3 px-4 text-left text-gray-600">Date</th>
+                <th class="py-3 px-4 text-left text-gray-600">Impressions</th>
+                <th class="py-3 px-4 text-left text-gray-600">Clicks</th>
+                <th class="py-3 px-4 text-left text-gray-600">Conversions</th>
+                <th class="py-3 px-4 text-left text-gray-600">Revenue</th>
+                <th class="py-3 px-4 text-left text-gray-600">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric in metrics %}
+            <tr class="border-b hover:bg-gray-50">
+                <td class="py-3 px-4"><a href="{% url 'marketing:ad_detail' metric.ad.pk %}" class="text-blue-600 hover:underline">{{ metric.ad.name }}</a></td>
+                <td class="py-3 px-4"><a href="{% url 'marketing:metric_detail' metric.pk %}" class="text-blue-600 hover:underline">{{ metric.date }}</a></td>
+                <td class="py-3 px-4">{{ metric.impressions }}</td>
+                <td class="py-3 px-4">{{ metric.clicks }}</td>
+                <td class="py-3 px-4">{{ metric.conversions }}</td>
+                <td class="py-3 px-4">${{ metric.revenue|floatformat:2 }}</td>
+                <td class="py-3 px-4 flex space-x-2">
+                    <a href="{% url 'marketing:metric_update' metric.pk %}" class="text-yellow-600 hover:underline">Edit</a>
+                    <a href="{% url 'marketing:metric_delete' metric.pk %}" class="text-red-600 hover:underline">Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="py-3 px-4 text-center text-gray-600">No metrics available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

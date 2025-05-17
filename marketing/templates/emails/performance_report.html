@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Performance Report</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2>Performance Report: {{ ad_name }}</h2>
+    <p>Summary for ad <strong>{{ ad_name }}</strong> for product <strong>{{ product_name }}</strong>.</p>
+    <h3>Metrics:</h3>
+    <ul>
+        <li>Impressions: {{ impressions }}</li>
+        <li>Clicks: {{ clicks }}</li>
+        <li>Conversions: {{ conversions }}</li>
+        <li>Revenue: ${{ revenue|floatformat:2 }}</li>
+        <li>Cost: ${{ cost|floatformat:2 }}</li>
+        <li>CTR: {{ ctr|floatformat:2 }}%</li>
+        <li>ROAS: {{ roas|floatformat:2 }}</li>
+        <li>Engagement Rate: {{ engagement|floatformat:2 }}%</li>
+    </ul>
+    <p>Review the ad in the admin panel for further details.</p>
+    <p>Best regards,<br>Product Marketing Team</p>
+</body>
+</html>

@@ -1,0 +1,18 @@
+Performance Report: {{ ad_name }}
+
+Summary for ad "{{ ad_name }}" for product "{{ product_name }}".
+
+Metrics:
+- Impressions: {{ impressions }}
+- Clicks: {{ clicks }}
+- Conversions: {{ conversions }}
+- Revenue: ${{ revenue|floatformat:2 }}
+- Cost: ${{ cost|floatformat:2 }}
+- CTR: {{ ctr|floatformat:2 }}%
+- ROAS: {{ roas|floatformat:2 }}
+- Engagement Rate: {{ engagement|floatformat:2 }}%
+
+Review the ad in the admin panel for further details.
+
+Best regards,
+Product Marketing Team

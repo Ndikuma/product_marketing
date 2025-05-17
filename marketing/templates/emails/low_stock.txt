@@ -1,0 +1,12 @@
+Low Stock Alert: {{ product_name }}
+
+The stock for "{{ product_name }}" is critically low.
+
+Details:
+- Current Stock: {{ stock }}
+- Threshold: {{ threshold }}
+
+Please restock the product. View it here: {{ purchase_url }}
+
+Best regards,
+Product Marketing Team

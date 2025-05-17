@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ad Paused Notification</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2>Ad Paused: {{ ad_name }}</h2>
+    <p>The ad <strong>{{ ad_name }}</strong> for product <strong>{{ product_name }}</strong> has been paused due to low performance.</p>
+    <h3>Performance Metrics:</h3>
+    <ul>
+        <li>Click-Through Rate (CTR): {{ ctr|floatformat:2 }}%</li>
+        <li>Return on Ad Spend (ROAS): {{ roas|floatformat:2 }}</li>
+        <li>Engagement Rate: {{ engagement|floatformat:2 }}%</li>
+    </ul>
+    <p>Please review the ad in the admin panel to adjust targeting or content.</p>
+    <p>Best regards,<br>Product Marketing Team</p>
+</body>
+</html>

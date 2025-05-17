@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Low Stock Alert</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+    <h2>Low Stock Alert: {{ product_name }}</h2>
+    <p>The stock for <strong>{{ product_name }}</strong> is critically low.</p>
+    <h3>Details:</h3>
+    <ul>
+        <li>Current Stock: {{ stock }}</li>
+        <li>Threshold: {{ threshold }}</li>
+    </ul>
+    <p>Please restock the product. View it here: <a href="{{ purchase_url }}">{{ purchase_url }}</a></p>
+    <p>Best regards,<br>Product Marketing Team</p>
+</body>
+</html>

@@ -1,0 +1,506 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Product Marketing - AI-Powered Affiliate Platform{% endblock %}
+{% block meta_description %}Join Product Marketing, the AI-driven platform for managing affiliate products, ads, and real-time analytics to maximize your earnings.{% endblock %}
+{% block og_title %}Product Marketing - Skyrocketing Affiliate Campaigns{% endblock %}
+{% block og_description %}Leverage AI with Product Marketing to promote products, create ads, and track performance effortlessly. Start earning today!{% endblock %}
+{% block og_image %}https://www.productmarketing.com/static/images/og-home.jpg{% endblock %}
+{% block canonical_url %}https://www.productmarketing.com{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .gradient-text { background: linear-gradient(to right, #3b82f6, #10b981); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hover-scale { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .hover-scale:hover { transform: scale(1.05); box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3); }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<header class="min-h-[80vh] bg-gradient-to-br from-gray-900 to-blue-950 text-white relative overflow-hidden" role="banner">
+  <div class="absolute inset-0 z-0 opacity-20 bg-[url('{% static 'images/grid-pattern.svg' %}')] bg-[length:40px_40px]"></div>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 flex flex-col lg:flex-row items-center gap-12 relative z-10">
+    <!-- Text Column -->
+    <div class="lg:w-1/2 text-center lg:text-left">
+      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+        Amplify Your Earnings with <span class="gradient-text">AI Marketing</span>
+      </h1>
+      <p class="text-lg sm:text-xl text-gray-300 mb-8 max-w-lg mx-auto lg:mx-0">
+        <strong class="text-blue-300 font-semibold">Product Marketing</strong> empowers you to promote affiliate products, create targeted ads, and track performance with AI-driven insights.
+      </p>
+      <ul class="text-blue-200 mb-8 space-y-4 text-base sm:text-lg">
+        <li class="flex items-center justify-center lg:justify-start gap-3">
+          <svg class="w-6 h-6 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16.6 8.6l-6.6 6.6-2.6-2.6-1.4 1.4 4 4 8-8z"/>
+          </svg>
+          AI-powered product trend prediction
+        </li>
+        <li class="flex items-center justify-center lg:justify-start gap-3">
+          <svg class="w-6 h-6 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13 2v2h6v2h-2l2 4v6c0 1.1-.9 2-2 2h-6c-1.1 0-2-.9-2-2v-6l2-4h-2v-2h6zm-2 4h-2v2h2v-2z"/>
+          </svg>
+          Precision-targeted ad campaigns
+        </li>
+        <li class="flex items-center justify-center lg:justify-start gap-3">
+          <svg class="w-6 h-6 text-purple-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 20a8 8 0 100-16 8 8 0 000 16zm1-12v4h4v2h-6v-6h2z"/>
+          </svg>
+          Real-time analytics dashboard
+        </li>
+        <li class="flex items-center justify-center lg:justify-start gap-3">
+          <svg class="w-6 h-6 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 18a8 8 0 110-16 8 8 0 010 16z"/>
+          </svg>
+          Multi-platform ad distribution
+        </li>
+      </ul>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+        <a href="{% url 'marketing:product_list' %}" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg text-white font-semibold flex items-center gap-2 hover-scale focus:outline-none focus:ring-4 focus:ring-blue-500">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.6 1.3 4.9 3.3 6.3C4.9 16.4 4 18.1 4 20v1h16v-1c0-1.9-.9-3.6-2.3-4.7 2-1.4 3.3-3.7 3.3-6.3V7c0-1.1-.9-2-2-2z"/>
+          </svg>
+          Explore Products
+        </a>
+        {% if user.is_authenticated and user.is_staff %}
+        <a href="{% url 'marketing:product_create' %}" class="px-8 py-4 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 rounded-lg text-white font-semibold flex items-center gap-2 hover-scale focus:outline-none focus:ring-4 focus:ring-green-500">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          Create Product
+        </a>
+        {% else %}
+        <a href="{% url 'marketing:register' %}" class="px-8 py-4 border-2 border-blue-400 text-blue-400 hover:bg-blue-900/50 rounded-lg font-semibold flex items-center gap-2 hover-scale focus:outline-none focus:ring-4 focus:ring-blue-400">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M15 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm-9-2V8c0-.6-.4-1-1-1s-1 .4-1 1v2H2c-.6 0-1 .4-1 1s.4 1 1 1h2v2c0 .6.4 1 1 1s1-.4 1-1v-2h2c.6 0 1-.4 1-1s-.4-1-1-1H6zm9 4c-2.7 0-8 1.3-8 4v1c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-1c0-2.7-5.3-4-8-4z"/>
+          </svg>
+          Join Now
+        </a>
+        {% endif %}
+      </div>
+      <p class="mt-6 text-sm sm:text-base text-gray-400">
+        Trusted by <span class="font-bold">5,000+</span> marketers worldwide
+      </p>
+    </div>
+    <!-- Image Column -->
+    <div class="lg:w-1/2 flex justify-center relative">
+      <div class="relative">
+        <img
+          src="{% static 'images/hero.jpg' %}"
+          alt="Product Marketing platform dashboard showing analytics and campaign management"
+          width="600"
+          height="450"
+          class="rounded-2xl shadow-2xl w-full max-w-[500px] lg:max-w-[600px] hover-scale"
+          loading="eager"
+          fetchpriority="high"
+          onerror="this.src='https://picsum.photos/seed/hero-' + Math.floor(Math.random() * 1000) + '/600/450';"
+        >
+        <div class="absolute -bottom-6 -right-6 bg-blue-600 rounded-lg shadow-xl p-4 w-32 h-32 flex items-center justify-center transform rotate-6 z-10">
+          <div class="text-center">
+            <span class="block text-2xl font-bold text-white">+42%</span>
+            <span class="block text-xs text-blue-200">ROI Increase</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Features Section -->
+<section class="py-20 bg-gray-900 text-white" aria-labelledby="features-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Left Image -->
+      <div class="relative">
+        <div class="absolute -inset-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl opacity-20 blur-lg"></div>
+        <img
+          src="{% static 'images/hero.jpg' %}"
+          alt="AI-powered marketing dashboard with analytics charts"
+          width="600"
+          height="400"
+          class="relative rounded-xl shadow-lg w-full object-cover h-auto hover-scale"
+          loading="lazy"
+          onerror="this.src='https://picsum.photos/seed/features-' + Math.floor(Math.random() * 1000) + '/600/400';"
+        >
+      </div>
+      <!-- Right Content -->
+      <div class="space-y-8">
+        <h2 id="features-heading" class="text-4xl font-extrabold gradient-text">Smarter Marketing with AI</h2>
+        <p class="text-lg sm:text-xl text-gray-300">
+          Product Marketing harnesses AI to simplify product management, optimize ad campaigns, and deliver actionable insights, empowering you to achieve superior results.
+        </p>
+        <ul class="space-y-6">
+          <li class="flex items-start space-x-4">
+            <div class="p-3 bg-blue-600 rounded-full flex-shrink-0 mt-1">
+              <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.6 1.3 4.9 3.3 6.3C4.9 16.4 4 18.1 4 20v1h16v-1c0-1.9-.9-3.6-2.3-4.7 2-1.4 3.3-3.7 3.3-6.3V7c0-1.1-.9-2-2-2z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white">Product Management</h3>
+              <p class="text-gray-400 mt-1">Effortlessly manage products, images, and inventory with our intuitive dashboard.</p>
+            </div>
+          </li>
+          <li class="flex items-start space-x-4">
+            <div class="p-3 bg-blue-600 rounded-full flex-shrink-0 mt-1">
+              <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 3h18v2H3zm4 4h10v2H7zm4 4h6v2h-6zm-4 4h10v2H7zm-4 4h18v2H3z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white">Ad Campaigns</h3>
+              <p class="text-gray-400 mt-1">Launch targeted ads with AI-driven audience segmentation and budget optimization.</p>
+            </div>
+          </li>
+          <li class="flex items-start space-x-4">
+            <div class="p-3 bg-blue-600 rounded-full flex-shrink-0 mt-1">
+              <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M21 16V8a2 2 0 00-1-1.7l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.7l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-white">Performance Analytics</h3>
+              <p class="text-gray-400 mt-1">Monitor CTR, ROAS, and engagement with real-time, visually stunning analytics.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-20 bg-gradient-to-br from-blue-900 to-indigo-900" aria-labelledby="products-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-12 gap-4">
+      <h2 id="products-heading" class="text-4xl font-extrabold gradient-text">Featured Products</h2>
+      {% if user.is_authenticated and user.is_staff %}
+      <a href="{% url 'marketing:product_create' %}" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-2 hover-scale focus:outline-none focus:ring-4 focus:ring-green-500">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Add Product
+      </a>
+      {% endif %}
+    </div>
+    <div class="relative">
+      <div id="product-carousel" class="flex overflow-x-auto gap-6 pb-6 scrollbar-hide snap-x snap-mandatory">
+        {% for product in featured_products %}
+        <article class="min-w-[300px] sm:min-w-[340px] snap-start shrink-0">
+          <div class="bg-gray-800/70 rounded-2xl shadow-xl backdrop-blur-md h-full flex flex-col hover-scale border border-gray-700/50 overflow-hidden">
+            <div class="relative pt-[75%] overflow-hidden">
+              <img
+                src="{{ product.get_primary_image|default:'https://picsum.photos/seed/product-'|add:product.pk|add:'/600/450' }}"
+                alt="{{ product.name }}"
+                width="600"
+                height="450"
+                class="absolute top-0 left-0 w-full h-full object-cover"
+                loading="lazy"
+              >
+            </div>
+            <div class="p-6 flex-grow flex flex-col">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xl font-semibold text-white">{{ product.name }}</h3>
+                <span class="px-3 py-1 bg-green-900/30 text-green-400 rounded-full text-sm font-bold">
+                  ${{ product.price|floatformat:2 }}
+                </span>
+              </div>
+              <p class="text-gray-300 mb-4 flex-grow">{{ product.description|truncatechars:120 }}</p>
+              <div class="flex items-center gap-2 mb-4">
+                <span class="text-yellow-400">★★★★☆</span>
+                <span class="text-gray-400 text-sm">(4.5 / 5)</span>
+              </div>
+              <a
+                href="{% url 'marketing:product_detail' product.pk %}"
+                class="mt-auto px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg text-white text-center font-semibold hover-scale focus:outline-none focus:ring-4 focus:ring-blue-500 flex items-center justify-center gap-2"
+              >
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 4.5C7 4.5 2.7 7.6 1 12c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5c-1.7-4.4-6-7.5-11-7.5zM12 17c-2.8 0-5-2.2-5-5s2.2-5 5-5 5 2.2 5 5-2.2 5-5 5zm0-8c-1.7 0-3 1.3-3 3s1.3 3 3 3 3-1.3 3-3-1.3-3-3-3z"/>
+                </svg>
+                View Details
+              </a>
+            </div>
+          </div>
+        </article>
+        {% empty %}
+        <div class="w-full py-12 text-center">
+          <p class="text-gray-400" role="alert">No featured products available at the moment.</p>
+          {% if user.is_authenticated and user.is_staff %}
+          <a href="{% url 'marketing:product_create' %}" class="inline-block mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg hover-scale focus:outline-none focus:ring-4 focus:ring-blue-500">
+            Add Your First Product
+          </a>
+          {% endif %}
+        </div>
+        {% endfor %}
+      </div>
+      <!-- Carousel Controls -->
+      <button id="product-prev" class="absolute top-1/2 -left-4 transform -translate-y-1/2 bg-gray-800/50 text-white p-3 rounded-full hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-500" aria-label="Previous product">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </button>
+      <button id="product-next" class="absolute top-1/2 -right-4 transform -translate-y-1/2 bg-gray-800/50 text-white p-3 rounded-full hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-blue-500" aria-label="Next product">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9 6l6 6-6 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Who Can Benefit Section -->
+<section class="py-20 bg-gray-900/50" aria-labelledby="benefit-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 id="benefit-heading" class="text-4xl font-extrabold gradient-text">Who Can Benefit?</h2>
+      <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mt-4">Our platform empowers a diverse range of users in affiliate marketing and e-commerce.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      {% for module in core_modules %}
+      <article class="bg-gray-800/70 p-8 rounded-2xl shadow-lg hover-scale border border-gray-700/50 backdrop-blur-sm">
+        <div class="mx-auto p-3 bg-blue-600 rounded-full mb-4 w-12 h-12 flex items-center justify-center">
+          {% if module.icon == 'store' %}
+          <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.6 1.3 4.9 3.3 6.3C4.9 16.4 4 18.1 4 20v1h16v-1c0-1.9-.9-3.6-2.3-4.7 2-1.4 3.3-3.7 3.3-6.3V7c0-1.1-.9-2-2-2z"/>
+          </svg>
+          {% elif module.icon == 'people' %}
+          <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 11c1.7 0 3-1.3 3-3s-1.3-3-3-3-3 1.3-3 3 1.3 3 3 3zM8 11c1.7 0 3-1.3 3-3S9.7 5 8 5 5 6.3 5 8s1.3 3 3 3zM16 13c-2.3 0-7 1.2-7 3v1h14v-1c0-1.8-4.7-3-7-3zM8 13c-2.3 0-7 1.2-7 3v1h14v-1c0-1.8-4.7-3-7-3z"/>
+          </svg>
+          {% elif module.icon == 'person' %}
+          <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4zm0 2c-2.7 0-8 1.3-8 4v1c0 .6.4 1 1 1h14c.6 0 1-.4 1-1v-1c0-2.7-5.3-4-8-4z"/>
+          </svg>
+          {% elif module.icon == 'business' %}
+          <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+          </svg>
+          {% else %}
+          <svg class="w-6 h-6 text-blue-200" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 17.3l4.2 2.6-.8-4.8 3.4-3.3-4.7-.7L12 6.7 9.9 11.1l-4.7.7 3.4 3.3-.8 4.8 4.2-2.6z"/>
+          </svg>
+          {% endif %}
+        </div>
+        <h3 class="text-xl font-bold text-white text-center">{{ module.title }}</h3>
+        <p class="text-gray-400 text-center mt-3">{{ module.description }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-20 bg-gray-900 text-white" aria-labelledby="how-it-works-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 id="how-it-works-heading" class="text-4xl font-extrabold gradient-text">How It Works</h2>
+      <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mt-4">Launch your affiliate marketing campaign in 3 simple steps.</p>
+    </div>
+    <div class="flex flex-col lg:flex-row justify-center gap-8">
+      {% for step in how_it_works_steps %}
+      <article class="relative flex-1 max-w-md">
+        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold shadow-xl border-2 border-gray-700 z-10" aria-hidden="true">
+          {{ forloop.counter }}
+        </div>
+        <div class="pt-10 pb-8 px-6 bg-gray-800/70 rounded-2xl border border-gray-700/50 h-full backdrop-blur-sm hover-scale">
+          <div class="mb-6 overflow-hidden rounded-lg shadow-lg border border-gray-700/50">
+            <img
+              src="{{ step.image|default:'https://picsum.photos/seed/step-'|add:forloop.counter|add:'/600/450' }}"
+              alt="{{ step.title }} step illustration"
+              width="600"
+              height="450"
+              class="w-full h-56 object-cover hover-scale"
+              loading="lazy"
+            >
+          </div>
+          <h3 class="text-xl font-bold mb-3 text-white text-center">{{ step.title }}</h3>
+          <p class="text-gray-400 text-center">{{ step.description }}</p>
+        </div>
+      </article>
+      {% empty %}
+      <p class="text-center text-gray-400 col-span-3">No steps available at the moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-20 bg-gray-800/50" aria-labelledby="testimonials-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 id="testimonials-heading" class="text-4xl font-extrabold text-center mb-12 gradient-text">What Our Users Say</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      {% for testimonial in testimonials %}
+      <article class="bg-gray-700/70 p-8 rounded-2xl shadow-lg hover-scale backdrop-blur-sm border border-gray-700/50">
+        <div class="flex items-center mb-4">
+          <img
+            src="{{ testimonial.avatar|default:'https://picsum.photos/seed/user-'|add:testimonial.role|add:'/100/100' }}"
+            alt="Portrait of {{ testimonial.name }}"
+            width="100"
+            height="100"
+            class="w-16 h-16 rounded-full object-cover border-2 border-blue-400 flex-shrink-0"
+            loading="lazy"
+          >
+          <div class="ml-4">
+            <h4 class="text-lg font-bold text-white">{{ testimonial.name }}</h4>
+            <p class="text-blue-300 text-sm">{{ testimonial.role }}</p>
+            <div class="flex mt-1">
+              {% for i in "12345" %}
+              <svg class="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 17.3l4.2 2.6-.8-4.8 3.4-3.3-4.7-.7L12 6.7 9.9 11.1l-4.7.7 3.4 3.3-.8 4.8 4.2-2.6z"/>
+              </svg>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <p class="text-gray-300 relative pl-6">
+          <svg class="w-6 h-6 text-blue-400/30 absolute left-0 top-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 17h3l2-4V7H5v6h3zm8 0h3l2-4V7h-6v6h3z"/>
+          </svg>
+          {{ testimonial.quote }}
+        </p>
+      </article>
+      {% empty %}
+      <p class="text-center text-gray-400 col-span-3">No testimonials available yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- FAQs Section -->
+<section class="py-20 bg-gray-800" aria-labelledby="faqs-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+    <h2 id="faqs-heading" class="text-4xl font-extrabold text-center mb-12 gradient-text">Frequently Asked Questions</h2>
+    <div class="space-y-4">
+      {% for faq in faqs %}
+      <details class="group bg-gray-700/70 rounded-2xl shadow-lg border border-gray-700/50 backdrop-blur-sm overflow-hidden" {% if forloop.first %}open{% endif %}>
+        <summary class="p-6 sm:p-8 text-lg font-bold text-white flex items-center justify-between cursor-pointer list-none focus:outline-none focus:ring-4 focus:ring-blue-500">
+          <span>{{ faq.question }}</span>
+          <svg class="w-5 h-5 transform group-open:rotate-180 transition-transform duration-300" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 10l5 5 5-5z"/>
+          </svg>
+        </summary>
+        <div class="px-6 sm:px-8 pb-6 sm:pb-8 pt-0 border-t border-gray-700/50">
+          <p class="text-gray-300">{{ faq.answer }}</p>
+        </div>
+      </details>
+      {% empty %}
+      <p class="text-center text-gray-400">No FAQs available at the moment.</p>
+      {% endfor %}
+    </div>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {% for faq in faqs %}
+        {
+          "@type": "Question",
+          "name": "{{ faq.question|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "{{ faq.answer|escapejs }}"
+          }
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+    </script>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-blue-900 to-indigo-900" aria-labelledby="cta-heading">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-3xl mx-auto">
+      <h2 id="cta-heading" class="text-4xl font-extrabold text-white mb-6">Ready to Revolutionize Your Marketing?</h2>
+      <p class="text-lg sm:text-xl text-gray-300 mb-8">
+        Join thousands of marketers using Product Marketing to supercharge their affiliate campaigns with AI-driven insights.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="{% url 'marketing:product_list' %}"
+          class="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 rounded-lg text-white font-semibold hover-scale focus:outline-none focus:ring-4 focus:ring-blue-500 flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.6 1.3 4.9 3.3 6.3C4.9 16.4 4 18.1 4 20v1h16v-1c0-1.9-.9-3.6-2.3-4.7 2-1.4 3.3-3.7 3.3-6.3V7c0-1.1-.9-2-2-2z"/>
+          </svg>
+          Get Started
+        </a>
+        <a
+          href="#how-it-works"
+          class="px-8 py-4 border-2 border-blue-400 text-blue-400 hover:bg-blue-900/50 rounded-lg font-semibold hover-scale focus:outline-none focus:ring-4 focus:ring-blue-400 flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 4c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm0 14c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6zm1-6c0 .6-.4 1-1 1s-1-.4-1-1v-3c0-.6.4-1 1-1s1 .4 1 1v3z"/>
+          </svg>
+          Learn More
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Product Carousel
+const productCarousel = document.getElementById('product-carousel');
+const prevButton = document.getElementById('product-prev');
+const nextButton = document.getElementById('product-next');
+
+if (productCarousel && prevButton && nextButton) {
+  prevButton.addEventListener('click', () => {
+    productCarousel.scrollBy({ left: -340, behavior: 'smooth' });
+  });
+  nextButton.addEventListener('click', () => {
+    productCarousel.scrollBy({ left: 340, behavior: 'smooth' });
+  });
+
+  // Auto-scroll for mobile
+  let scrollInterval;
+  function startAutoScroll() {
+    scrollInterval = setInterval(() => {
+      if (productCarousel.scrollLeft + productCarousel.clientWidth >= productCarousel.scrollWidth) {
+        productCarousel.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        productCarousel.scrollBy({ left: 340, behavior: 'smooth' });
+      }
+    }, 5000);
+  }
+  if (window.innerWidth < 640) {
+    startAutoScroll();
+  }
+  productCarousel.addEventListener('touchstart', () => clearInterval(scrollInterval));
+  productCarousel.addEventListener('touchend', () => {
+    if (window.innerWidth < 640) {
+      startAutoScroll();
+    }
+  });
+
+  // Keyboard navigation
+  productCarousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      prevButton.click();
+      e.preventDefault();
+    } else if (e.key === 'ArrowRight') {
+      nextButton.click();
+      e.preventDefault();
+    }
+  });
+}
+
+// FAQ Accordion: Close others when one is opened
+document.querySelectorAll('details').forEach(detail => {
+  detail.addEventListener('toggle', () => {
+    if (detail.open) {
+      document.querySelectorAll('details').forEach(d => {
+        if (d !== detail) d.open = false;
+      });
+    }
+  });
+});
+</script>
+{% endblock %}

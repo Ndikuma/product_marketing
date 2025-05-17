@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title|default:"Manage Product Content" }} for {{ product.name|default:"Product" }}{% endblock %}
+{% block meta_description %}{{ title|default:"Manage your product content" }} for {{ product.name|default:"your product" }} with Product Marketing's AI-powered platform.{% endblock %}
+{% block og_title %}{{ title|default:"Manage Product Content" }} - Product Marketing{% endblock %}
+{% block og_description %}Easily manage {{ product.name|default:"your product" }} content with Product Marketing's intuitive interface and AI-driven tools.{% endblock %}
+{% block og_image %}https://www.productmarketing.com/static/images/og-form.jpg{% endblock %}
+{% block canonical_url %}https://www.productmarketing.com{% if request.path %}{{ request.path }}{% endif %}{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<style>
+  .gradient-text { background: linear-gradient(to right, #60a5fa, #34d399); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hover-scale { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .hover-scale:hover { transform: scale(1.05); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+  .image-preview { max-width: 100%; max-height: 150px; object-fit: cover; border-radius: 0.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-16 bg-gray-900 min-h-screen flex items-center justify-center">
+  <div class="max-w-lg mx-auto bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-700">
+    <h1 class="text-3xl font-extrabold gradient-text mb-8 text-center">{{ title|default:"Manage Product Content" }} for {{ product.name|default:"Product" }}</h1>
+    <form method="post" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+      <div class="space-y-5">
+        {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-200 mb-1">
+            {{ field.label }}{% if field.field.required %}<span class="text-red-400">*</span>{% endif %}
+          </label>
+          <div class="mt-1">
+            {% if field.field.widget.input_type == 'checkbox' %}
+              <div class="flex items-center">
+                {{ field }}
+                <span class="ml-2 text-gray-400 text-sm">{{ field.label }}</span>
+              </div>
+            {% elif field.field.widget.input_type == 'file' %}
+              <div class="relative">
+                {{ field }}
+                <div class="mt-2 text-sm text-gray-400">
+                  {% if field.value %}
+                    Current file: {{ field.value.name }}
+                    <a href="#" class="text-blue-400 hover:underline" onclick="this.closest('.relative').querySelector('input[type=file]').value=''; this.closest('.relative').querySelector('.image-preview')?.remove();">Remove</a>
+                  {% else %}
+                    No file uploaded
+                  {% endif %}
+                </div>
+                {% if field.value %}
+                  <img src="{{ field.value.url }}" alt="Current file preview" class="image-preview mt-2" loading="lazy" />
+                {% endif %}
+                <div class="image-preview-container mt-2"></div>
+              </div>
+            {% else %}
+              {{ field }}
+            {% endif %}
+          </div>
+          {% if field.help_text %}
+            <p class="mt-1 text-sm text-gray-400">{{ field.help_text|safe }}</p>
+          {% endif %}
+          {% if field.errors %}
+            {% for error in field.errors %}
+              <p class="mt-1 text-sm text-red-400">{{ error }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+        {% endfor %}
+        {% if form.non_field_errors %}
+          <div class="bg-red-900/50 border-l-4 border-red-500 text-red-300 p-4 rounded">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="mt-8 flex flex-wrap justify-end gap-4">
+        <button
+          type="submit"
+          name="add_another"
+          class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg font-semibold hover:from-green-400 hover:to-green-500 hover-scale focus:outline-none focus:ring-4 focus:ring-green-400 transition-all duration-300"
+        >
+          Save and Add Another
+        </button>
+        <button
+          type="submit"
+          class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg font-semibold hover:from-blue-400 hover:to-blue-500 hover-scale focus:outline-none focus:ring-4 focus:ring-blue-400 transition-all duration-300"
+        >
+          Save
+        </button>
+        <a
+          href="{% url 'marketing:product_detail' product.pk %}"
+          class="px-6 py-3 border-2 border-gray-600 text-gray-300 rounded-lg font-semibold hover:bg-gray-700 hover-scale focus:outline-none focus:ring-4 focus:ring-gray-500 transition-all duration-300"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // Enhance form input focus states
+  document.querySelectorAll('input, select, textarea').forEach(input => {
+    input.addEventListener('focus', () => {
+      input.classList.add('ring-2', 'ring-blue-400');
+    });
+    input.addEventListener('blur', () => {
+      input.classList.remove('ring-2', 'ring-blue-400');
+    });
+  });
+
+  // Live image preview for file inputs
+  document.querySelectorAll('input[type=file]').forEach(fileInput => {
+    fileInput.addEventListener('change', () => {
+      const container = fileInput.closest('.relative').querySelector('.image-preview-container');
+      const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file uploaded';
+      const fileDisplay = fileInput.closest('.relative').querySelector('.text-gray-400');
+      if (fileDisplay) {
+        fileDisplay.textContent = fileName;
+      }
+      if (container) {
+        container.innerHTML = '';
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          if (file.type.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.alt = 'File preview';
+            img.className = 'image-preview';
+            img.onload = () => URL.revokeObjectURL(img.src);
+            container.appendChild(img);
+          }
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}
